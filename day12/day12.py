@@ -1,0 +1,5 @@
+fh = open('30 days 30 hour operation.txt', 'w')
+fh.write('i have completed 10 days successfully')
+fh = open('30 days 30 hour operation', 'a')
+fh.write("\n Mohamed Ameer")
+fh.close()
