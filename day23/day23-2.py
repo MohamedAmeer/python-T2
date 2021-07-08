@@ -1,36 +1,71 @@
-# basic weather app.
-
+from configparser import ConfigParser
 import requests
+from tkinter import *
+from tkinter import messagebox
+
+# configuration file
+config_file = "config.ini"
+config = ConfigParser()
+config.read(config_file)
+
+url = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
 
 
-api_key = "Your_API_Key"
+def weather(city, api_key=None):
+    result = requests.get(url.format(city, api_key))
+    if result:
+        json = result.json()
+        city = json['name']
+        country = json['sys']
+        temp_kelvin = json['main']['temp']
+        temp_celsius = temp_kelvin - 273.15
+        weather1 = json['weather'][0]['main']
+        final = [city, country, temp_kelvin, temp_celsius, weather1]
+        return final
+    else:
+        print("NO Content Found")
 
 
-base_url = "http://api.openweathermap.org/data/2.5/weather?"
+# search city
+def weather(city):
+    pass
 
-# Give city name
-city_name = input("Enter city name : ")
 
-complete_url = base_url + "appid=" + api_key + "&q=" + city_name
-response = requests.get(complete_url)
-x = response.json()
+def weather(city):
+    pass
 
-if x["cod"] != "404":
 
-    y = x["main"]
-    current_temperature = y["temp"]
-    current_pressure = y["pressure"]
-    current_humidiy = y["humidity"]
-    z = x["weather"]
-    weather_description = z[0]["description"]
-    print(" Temperature (in kelvin unit) = " +
-          str(current_temperature) +
-          "\n atmospheric pressure (in hPa unit) = " +
-          str(current_pressure) +
-          "\n humidity (in percentage) = " +
-          str(current_humidiy) +
-          "\n description = " +
-          str(weather_description))
+def weather(city):
+    pass
 
-else:
-    print(" City Not Found ")
+def search():
+    city = city_text.get()
+    weather1 = weather(city)
+    if weather:
+        location_lbl['text'] = '{} '.format(weather[0], weather[1])
+        temperature_label['text'] = str(weather[3]) + " Degree Celsius"
+        weather_l['text'] = weather[4]
+    else:
+        messagebox.showerror('Error', "Cannot find {}".format(city))
+
+
+app = Tk()
+
+app.title("Weather App")
+
+app.geometry("300x300")
+
+# add labels, buttons and text
+city_text = StringVar()
+city_entry = Entry(app, textvariable=city_text)
+city_entry.pack()
+Search_btn = Button(app, text="Search Weather", bg='red', fg='yellow', font=('helvetica', 12, 'bold'),
+                    command=search)
+Search_btn.pack()
+location_lbl = Label(app, text="Location", fg='yellow', bg='red', font={'bold', 24})
+location_lbl.pack()
+temperature_label = Label(app, text="")
+temperature_label.pack()
+weather_l = Label(app, text="")
+weather_l.pack()
+app.mainloop()
